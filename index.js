@@ -12,8 +12,8 @@ var ical = require('ical-generator'),
 // authenticating
 var authenticate = function (credentials, cb) {
     var form = {
-        username: credentials.username || "",
-        password: credentials.password || "",
+        username: credentials.u || "",
+        password: credentials.p || "",
         intranet_annee_precedente:"0",
         Connexion:"Connexion"
     }
