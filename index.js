@@ -40,6 +40,7 @@ var getEvents = function (req, res, cookie) {
         for(var event in body)
         {
             events.push({
+                uid: body[event].id,
                 start: body[event].start,
                 end: body[event].end,
                 summary: body[event].title,
