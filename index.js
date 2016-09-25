@@ -36,13 +36,14 @@ var getEvents = function (req, res, cookie) {
             return res.status(400).json({status: 400, result: null, error: "Failed to authenticate"});
         }
         
+        var timezone = "+02:00";
         var events = []
         for(var event in body)
         {
             events.push({
                 uid: body[event].id.toString(),
-                start: new Date(body[event].start),
-                end: new Date(body[event].end),
+                start: new Date(body[event].start+timezone),
+                end: new Date(body[event].end+timezone),
                 summary: body[event].title,
                 url: body[event].url,
                 description: body[event].url
