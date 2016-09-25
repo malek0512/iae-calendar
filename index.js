@@ -28,7 +28,7 @@ var getEvents = function (req, res, cookie) {
             logger.error('Failed to authenticate : ', err);
             return res.status(400).json({status: 400, result: null, error: "Failed to authenticate"});
         }
-        
+
         try {
             body = JSON.parse(body);
         } catch (e) {
@@ -40,15 +40,18 @@ var getEvents = function (req, res, cookie) {
         for(var event in body)
         {
             events.push({
-                uid: body[event].id,
-                start: body[event].start,
-                end: body[event].end,
+                uid: body[event].id.toString(),
+                start: new Date(body[event].start),
+                end: new Date(body[event].end),
                 summary: body[event].title,
-                url: body[event].url
+                url: body[event].url,
+                description: body[event].url
             });
         }
-        //logger.log(events);
+        
         cal.events(events);
+        //logger.log(events[0]);
+        //logger.log(cal.events()[0].start());
         cal.serve(res);
     })
 }
