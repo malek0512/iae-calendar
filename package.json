@@ -1,0 +1,14 @@
+{
+  "name": "iae-calendar",
+  "author": "Malek Mammar <malek.mammar@gmail.com>",
+  "version": "0.0.1",
+  "bugs": {
+    "url": "https://github.com/malek0512/iae-calendar.git",
+    "email": "malek.mammar@gmail.com"
+  },
+  "dependencies": {
+    "ical-generator": "^0.2.8"
+  },
+  "main": "./index.js",
+  "start": "node index.js"
+}
