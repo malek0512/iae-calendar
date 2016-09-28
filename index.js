@@ -9,6 +9,8 @@ var ical = require('ical-generator'),
         prodId: '//iae-grenoble.fr//icalendar//EN',
     });
 
+var base_url = "http://intranet.iae-grenoble.fr";
+
 // authenticating
 var authenticate = function (credentials, cb) {
     var form = {
@@ -17,13 +19,21 @@ var authenticate = function (credentials, cb) {
         intranet_annee_precedente:"0",
         Connexion:"Connexion"
     }
-    request.post({url:'http://intranet.iae-grenoble.fr/index/index', form: form}, cb)    
+    request.post({url: base_url + '/index/index', form: form}, cb)    
 }
 
 // getting events
 var getEvents = function (req, res, cookie) {
-    request.get({url:'http://intranet.iae-grenoble.fr/full-calendar/evenements?planningType=0&start=1474236000&end=1487977200',
-                headers:{'Cookie':cookie}}, function (err, httpResponse, body) {
+
+    var params = req.query;
+    delete params.u;
+    delete params.p;
+    params.planningType = params.planningType || "0";
+    params.start = params.start || "1474236000";
+    params.end = params.end || "1487977200";
+
+    request.get({url: base_url + '/full-calendar/evenements', //?planningType=0&start=1474236000&end=1487977200
+                headers:{'Cookie':cookie}, qs: params}, function (err, httpResponse, body) {
         if (err) {
             logger.error('Failed to authenticate : ', err);
             return res.status(400).json({status: 400, result: null, error: "Failed to authenticate"});
@@ -42,11 +52,11 @@ var getEvents = function (req, res, cookie) {
         {
             events.push({
                 uid: body[event].id.toString(),
-                start: new Date(body[event].start+timezone),
-                end: new Date(body[event].end+timezone),
+                start: new Date(body[event].start + timezone),
+                end: new Date(body[event].end + timezone),
                 summary: body[event].title,
-                url: body[event].url,
-                description: body[event].url
+                url: base_url + body[event].url,
+                description: base_url + body[event].url
             });
         }
         
