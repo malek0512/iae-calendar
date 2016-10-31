@@ -3,6 +3,7 @@
 var ical = require('ical-generator'),
     app = require('express')(),
     request = require('request'),
+    moment = require('moment-timezone'),
     logger = console,
     cal = ical({
         domain: 'iae-grenoble.fr',
@@ -46,14 +47,13 @@ var getEvents = function (req, res, cookie) {
             return res.status(400).json({status: 400, result: null, error: "Failed to authenticate"});
         }
         
-        var timezone = "+02:00";
         var events = []
         for(var event in body)
         {
             events.push({
                 uid: body[event].id.toString(),
-                start: new Date(body[event].start + timezone),
-                end: new Date(body[event].end + timezone),
+                start: moment.tz(body[event].start, "Europe/Paris").format(),
+                end: moment.tz(body[event].end, "Europe/Paris").format(),
                 summary: body[event].title,
                 url: base_url + body[event].url,
                 description: base_url + body[event].url

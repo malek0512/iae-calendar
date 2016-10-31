@@ -9,6 +9,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "ical-generator": "^0.2.8",
+    "moment-timezone": "^0.5.7",
     "request": "^2.75.0"
   },
   "engines": {
