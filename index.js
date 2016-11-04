@@ -11,7 +11,7 @@ var ical = require('ical-generator'),
     });
 
 var base_url = "http://intranet.iae-grenoble.fr";
-
+var timezone = "Europe/Paris";
 // authenticating
 var authenticate = function (credentials, cb) {
     var form = {
@@ -50,13 +50,16 @@ var getEvents = function (req, res, cookie) {
         var events = []
         for(var event in body)
         {
+            var desc = body[event].url? (base_url + body[event].url) : "";
+            desc += " (Exported: " + moment.tz(Date.now(), timezone).format() + ")";
+
             events.push({
                 uid: body[event].id.toString(),
-                start: moment.tz(body[event].start, "Europe/Paris").format(),
-                end: moment.tz(body[event].end, "Europe/Paris").format(),
+                start: moment.tz(body[event].start, timezone).format(),
+                end: moment.tz(body[event].end, timezone).format(),
                 summary: body[event].title,
                 url: base_url + body[event].url,
-                description: base_url + body[event].url
+                description: desc
             });
         }
         
