@@ -1,7 +1,8 @@
 'use strict';
 
 var ical = require('ical-generator'),
-    app = require('express')(),
+    express = require('express'),
+    app = express(),
     request = require('request'),
     moment = require('moment-timezone'),
     logger = console,
@@ -12,6 +13,7 @@ var ical = require('ical-generator'),
 
 var base_url = "http://intranet.iae-grenoble.fr";
 var timezone = "Europe/Paris";
+
 // authenticating
 var authenticate = function (credentials, cb) {
     var form = {
@@ -71,14 +73,22 @@ var getEvents = function (req, res, cookie) {
 }
 
 
-var port = process.env.PORT || 5000;
-app.use(function(req, res) {
-    authenticate(req.query || {}, function (err, httpResponse, body) {
-        //logger.log(httpResponse.headers['set-cookie']);
-        getEvents(req, res, httpResponse.headers['set-cookie'][0]);
-    });
+app.use(function(req, res, next) {
+    if (req.query.hasOwnProperty('u') && req.query.hasOwnProperty('p'))
+        authenticate(req.query || {}, function (err, httpResponse, body) {
+            //logger.log(httpResponse.headers['set-cookie']);
+            getEvents(req, res, httpResponse.headers['set-cookie'][0]);
+        });
+    else 
+        next();
 });
 
+app.use(express.static('public'));
+app.get('/', function (req, res) {
+    res.sendFile('index.html');
+});
+
+var port = process.env.PORT || 5000;
 app.listen(port, function() {
     logger.log('Server running at http://127.0.0.1:'+port);
 });
