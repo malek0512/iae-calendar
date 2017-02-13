@@ -32,8 +32,8 @@ var getEvents = function (req, res, cookie) {
     delete params.u;
     delete params.p;
     params.planningType = params.planningType || "0";
-    params.start = params.start || "1474236000";
-    params.end = params.end || "1487977200";
+    params.start = (Date.parse(params.start) || Date.parse("2016-09-01")) / 1000; //"1474236000"
+    params.end = (Date.parse(params.end) || Date.parse("2017-06-01")) / 1000; //"1487977200"
 
     request.get({url: base_url + '/full-calendar/evenements', //?planningType=0&start=1474236000&end=1487977200
                 headers:{'Cookie':cookie}, qs: params}, function (err, httpResponse, body) {
@@ -52,7 +52,7 @@ var getEvents = function (req, res, cookie) {
         var events = []
         for(var event in body)
         {
-            var desc = body[event].url? (base_url + body[event].url) : "";
+            var desc = body[event].url ? (base_url + body[event].url) : "";
             desc += " (Exported: " + moment.tz(Date.now(), timezone).format() + ")";
 
             events.push({
@@ -90,5 +90,5 @@ app.get('/', function (req, res) {
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
-    logger.log('Server running at http://127.0.0.1:'+port);
+    logger.log('Server running at http://127.0.0.1:' + port);
 });
